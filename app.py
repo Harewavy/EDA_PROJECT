@@ -1,6 +1,23 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+
+# Read the dataset
+try:
+    df = pd.read_csv('vehicles_us.csv')
+except FileNotFoundError:
+    st.error("The dataset 'vehicles_us.csv' was not found. Please ensure the file is in the correct location.")
+    st.stop()
+
+# Display raw data to inspect column names and data types
+st.write("Raw data preview:")
+st.write(df.head())
+
+# Clean column names
+df.columns = df.columns.str.strip()
+
+# Display cleaned column names to verify
+st.write("Cleaned column names:")
+st.write(df.columns.tolist())
 
 # Function to clean data
 def clean_data(df):
@@ -26,17 +43,6 @@ def clean_data(df):
     df['paint_color'] = df['paint_color'].fillna('unknown')
 
     return df
-
-# Read the dataset
-try:
-    df = pd.read_csv('vehicles_us.csv')
-except FileNotFoundError:
-    st.error("The dataset 'vehicles_us.csv' was not found. Please ensure the file is in the correct location.")
-    st.stop()
-
-# Display the column names to ensure 'manufacturer' is present
-st.write("Column names in the dataset:")
-st.write(df.columns)
 
 # Clean the dataset
 df = clean_data(df)
