@@ -1,6 +1,28 @@
 import streamlit as st
 import pandas as pd
 
+# Function to convert columns to appropriate types
+def convert_columns(df):
+    # Convert 'price' column to numeric, coerce errors
+    df['price'] = pd.to_numeric(df['price'], errors='coerce')
+
+    # Convert other necessary columns to numeric, coerce errors
+    df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
+    df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
+    df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
+
+    return df
+
+# Function to handle missing values
+def handle_missing_values(df):
+    df['condition'] = df['condition'].fillna('unknown')
+    df['fuel'] = df['fuel'].fillna('unknown')
+    df['transmission'] = df['transmission'].fillna('unknown')
+    df['type'] = df['type'].fillna('unknown')
+    df['paint_color'] = df['paint_color'].fillna('unknown')
+    df['is_4wd'] = df['is_4wd'].fillna(0).astype(bool)
+    return df
+
 # Read the dataset
 try:
     df = pd.read_csv('vehicles_us.csv')
@@ -15,27 +37,14 @@ st.write(df.head())
 # Clean column names
 df.columns = df.columns.str.strip()
 
-# Ensure 'price' column is numeric and handle conversion issues
-df['price'] = pd.to_numeric(df['price'], errors='coerce')
+# Convert columns to appropriate types
+df = convert_columns(df)
 
-# Display cleaned 'price' column
-st.write("Cleaned 'price' column preview:")
-st.write(df['price'].head(10))
+# Handle missing values
+df = handle_missing_values(df)
 
 # Drop rows with NaN values in 'price'
 df = df.dropna(subset=['price'])
-
-# Ensure all columns have the correct data types
-df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
-df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
-df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
-
-# Fill NaN values in non-numeric columns with a placeholder
-df['condition'] = df['condition'].fillna('unknown')
-df['fuel'] = df['fuel'].fillna('unknown')
-df['transmission'] = df['transmission'].fillna('unknown')
-df['type'] = df['type'].fillna('unknown')
-df['paint_color'] = df['paint_color'].fillna('unknown')
 
 # Display cleaned DataFrame preview
 st.write("Cleaned DataFrame preview:")
