@@ -1,8 +1,13 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px  # Ensure plotly.express is imported
 
 # Read the dataset
-df = pd.read_csv('vehicles_us.csv')
+try:
+    df = pd.read_csv('vehicles_us.csv')
+except FileNotFoundError:
+    st.error("The dataset 'vehicles_us.csv' was not found. Please ensure the file is in the correct location.")
+    st.stop()
 
 # Clean column names
 df.columns = df.columns.str.strip()
@@ -12,10 +17,13 @@ df['manufacturer'] = df['model'].apply(lambda x: x.split()[0] if pd.notnull(x) e
 
 # Function to convert columns to appropriate types
 def convert_columns(df):
-    df['price'] = pd.to_numeric(df['price'], errors='coerce')
-    df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
-    df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
-    df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
+    try:
+        df['price'] = pd.to_numeric(df['price'], errors='coerce')
+        df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
+        df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
+        df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
+    except Exception as e:
+        st.error(f"Error converting columns to numeric: {e}")
     return df
 
 # Function to handle missing values
@@ -64,15 +72,26 @@ if st.checkbox('Show Raw Data'):
 
 # Plotly Express histogram
 st.header('Price Distribution')
-fig = px.histogram(df, x='price', title='Distribution of Car Prices')
-st.plotly_chart(fig)
+try:
+    fig = px.histogram(df, x='price', title='Distribution of Car Prices')
+    st.plotly_chart(fig)
+except Exception as e:
+    st.error(f"Error creating histogram: {e}")
 
 # Plotly Express scatter plot
 st.header('Price vs. Odometer by Condition')
-fig = px.scatter(df, x='odometer', y='price', color='condition', title='Price vs. Odometer by Condition')
-st.plotly_chart(fig)
+try:
+    fig = px.scatter(df, x='odometer', y='price', color='condition', title='Price vs. Odometer by Condition')
+    st.plotly_chart(fig)
+except Exception as e:
+    st.error(f"Error creating scatter plot: {e}")
 
 # Checkbox to show/hide filtered dataframe
-filtered_df = df[df['manufacturer'].map(df['manufacturer'].value_counts()) > 1000]
-if st.checkbox('Show Filtered DataFrame (Manufacturers with more than 1000 ads)'):
-    st.write(filtered_df)
+try:
+    filtered_df = df[df['manufacturer'].map(df['manufacturer'].value_counts()) > 1000]
+    if st.checkbox('Show Filtered DataFrame (Manufacturers with more than 1000 ads)'):
+        st.write(filtered_df)
+except Exception as e:
+    st.error(f"Error filtering DataFrame: {e}")
+
+# Add more visualizations as needed
