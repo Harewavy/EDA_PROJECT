@@ -1,7 +1,17 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.express as px
+
+# Function to display detailed data information
+def display_data_info(df):
+    st.write("First few rows of the dataset:")
+    st.write(df.head())
+    st.write("Column names in the dataset:")
+    st.write(df.columns)
+    st.write("Data types of each column:")
+    st.write(df.dtypes)
+    st.write("Summary statistics of the dataset:")
+    st.write(df.describe(include='all'))
 
 # Read the dataset
 try:
@@ -10,17 +20,8 @@ except FileNotFoundError:
     st.error("The dataset 'vehicles_us.csv' was not found. Please ensure the file is in the correct location.")
     st.stop()
 
-# Display the first few rows for initial debugging
-st.write("First few rows of the dataset:")
-st.write(df.head())
-
-# Display column names for debugging
-st.write("Column names in the dataset:")
-st.write(df.columns)
-
-# Display the data types of each column
-st.write("Data types of each column:")
-st.write(df.dtypes)
+# Display initial data info
+display_data_info(df)
 
 # Check for non-numeric values in the 'price' column
 non_numeric_prices = df[~df['price'].astype(str).str.isnumeric()]
@@ -43,6 +44,10 @@ if df['price'].isnull().any():
 # Display the cleaned data types of each column
 st.write("Cleaned data types of each column:")
 st.write(df.dtypes)
+
+# Additional detailed checks for 'price' column
+st.write("Detailed info for 'price' column:")
+st.write(df['price'].describe())
 
 # Header
 st.header('Car Sales Advertisement Dashboard')
