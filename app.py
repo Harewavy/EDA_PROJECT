@@ -17,23 +17,24 @@ st.write(df.head())
 st.write("Column names in the dataset:")
 st.write(df.columns)
 
-# Check for non-numeric values in the 'price' column
-non_numeric_prices = df[~df['price'].astype(str).str.isnumeric()]
-if not non_numeric_prices.empty:
-    st.error("The 'price' column contains non-numeric values that could not be converted.")
-    st.write("Rows with non-numeric 'price' values:")
-    st.write(non_numeric_prices)
-    st.stop()
+# Display the data types of each column
+st.write("Data types of each column:")
+st.write(df.dtypes)
 
+# Convert all columns to appropriate data types
 # Ensure 'price' column is numeric and handle conversion issues
 df['price'] = pd.to_numeric(df['price'], errors='coerce')
 
-# Handle any potential NaN values in 'price' after conversion
+# Check if there are any NaN values in 'price' after conversion
 if df['price'].isnull().any():
-    st.error("The 'price' column contains NaN values after conversion.")
-    st.write("Rows with NaN values in 'price':")
+    st.write("Rows with NaN values in 'price' after conversion:")
     st.write(df[df['price'].isnull()])
-    st.stop()
+    # Fill NaN values with 0 or drop rows with NaN values in 'price'
+    df = df.dropna(subset=['price'])
+
+# Display the cleaned data types of each column
+st.write("Cleaned data types of each column:")
+st.write(df.dtypes)
 
 # Header
 st.header('Car Sales Advertisement Dashboard')
