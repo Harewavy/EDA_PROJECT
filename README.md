@@ -15,12 +15,12 @@ Follow these steps to set up and run the project locally:
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/Harewavy/EDA_2.git
+    git clone https://github.com/Harewavy/EDA_PROJECT.git
     ```
 
 2. **Navigate to the Project Directory**:
     ```bash
-    cd EDA_2
+    cd EDA_PROJECT
     ```
 
 3. **Create and Activate a Python Virtual Environment**:
