@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.express as px  # Ensure plotly.express is imported
 
 # Read the dataset
@@ -15,12 +16,20 @@ df.columns = df.columns.str.strip()
 # Create 'manufacturer' column from the first word of 'model' column
 df['manufacturer'] = df['model'].apply(lambda x: x.split()[0] if pd.notnull(x) else x)
 
-# Function to convert columns to appropriate types
+# Display the unique values in the 'price' column before conversion
+st.write("Unique values in 'price' column before conversion:")
+st.write(df['price'].unique()[:20])  # Display the first 20 unique values
+
+# Function to convert columns to appropriate types with detailed logging
 def convert_columns(df):
     try:
+        st.write("Converting 'price' column to numeric...")
         df['price'] = pd.to_numeric(df['price'], errors='coerce')
+        st.write("Converting 'model_year' column to numeric...")
         df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
+        st.write("Converting 'cylinders' column to numeric...")
         df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
+        st.write("Converting 'odometer' column to numeric...")
         df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
     except Exception as e:
         st.error(f"Error converting columns to numeric: {e}")
@@ -45,16 +54,17 @@ df = handle_missing_values(df)
 # Drop rows with NaN values in 'price'
 df = df.dropna(subset=['price'])
 
-# Display cleaned DataFrame preview
+# Safely display data types after conversion
 st.write("Data types after cleaning:")
 try:
-    st.write(df.dtypes.astype(str))
+    st.write(df.dtypes.astype(str).to_dict())
 except Exception as e:
     st.error(f"Error displaying data types: {e}")
 
+# Safely display a preview of the cleaned DataFrame
 st.write("Cleaned DataFrame preview:")
 try:
-    st.write(df.head(10).astype(str))
+    st.write(df.head(10).to_dict())
 except Exception as e:
     st.error(f"Error displaying DataFrame: {e}")
 
@@ -68,7 +78,7 @@ st.header('Car Sales Advertisement Dashboard')
 
 # Checkbox to show/hide the raw data
 if st.checkbox('Show Raw Data'):
-    st.write(df.head(10))
+    st.write(df.head(10).to_dict())
 
 # Plotly Express histogram
 st.header('Price Distribution')
@@ -90,7 +100,7 @@ except Exception as e:
 try:
     filtered_df = df[df['manufacturer'].map(df['manufacturer'].value_counts()) > 1000]
     if st.checkbox('Show Filtered DataFrame (Manufacturers with more than 1000 ads)'):
-        st.write(filtered_df)
+        st.write(filtered_df.to_dict())
 except Exception as e:
     st.error(f"Error filtering DataFrame: {e}")
 
