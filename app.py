@@ -34,6 +34,10 @@ except FileNotFoundError:
     st.error("The dataset 'vehicles_us.csv' was not found. Please ensure the file is in the correct location.")
     st.stop()
 
+# Display the column names to ensure 'manufacturer' is present
+st.write("Column names in the dataset:")
+st.write(df.columns)
+
 # Clean the dataset
 df = clean_data(df)
 
