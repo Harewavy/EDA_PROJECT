@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 
 # Read the dataset
 df = pd.read_csv('vehicles_us.csv')
@@ -38,13 +37,18 @@ df = handle_missing_values(df)
 # Drop rows with NaN values in 'price'
 df = df.dropna(subset=['price'])
 
-# Ensure all columns have the correct data types before displaying
-st.write("Data types after cleaning:")
-st.write(df.dtypes)
-
 # Display cleaned DataFrame preview
+st.write("Data types after cleaning:")
+try:
+    st.write(df.dtypes.astype(str))
+except Exception as e:
+    st.error(f"Error displaying data types: {e}")
+
 st.write("Cleaned DataFrame preview:")
-st.write(df.head(10))
+try:
+    st.write(df.head(10).astype(str))
+except Exception as e:
+    st.error(f"Error displaying DataFrame: {e}")
 
 # Check if 'manufacturer' column exists
 if 'manufacturer' not in df.columns:
@@ -72,5 +76,3 @@ st.plotly_chart(fig)
 filtered_df = df[df['manufacturer'].map(df['manufacturer'].value_counts()) > 1000]
 if st.checkbox('Show Filtered DataFrame (Manufacturers with more than 1000 ads)'):
     st.write(filtered_df)
-
-# Add more visualizations as needed
