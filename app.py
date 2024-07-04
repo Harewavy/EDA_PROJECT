@@ -8,6 +8,9 @@ df = pd.read_csv('vehicles_us.csv')
 # Clean column names
 df.columns = df.columns.str.strip()
 
+# Create 'manufacturer' column from the first word of 'model' column
+df['manufacturer'] = df['model'].apply(lambda x: x.split()[0] if pd.notnull(x) else x)
+
 # Function to convert columns to appropriate types
 def convert_columns(df):
     df['price'] = pd.to_numeric(df['price'], errors='coerce')
