@@ -58,7 +58,7 @@ Open `EDA.ipynb` in Jupyter to explore the data analysis.
 ## Live Demo
 
 You can access the live application here:
-[Car Sales Advertisement Dashboard](https://<APP_NAME>.onrender.com)
+[Car Sales Advertisement Dashboard](https://eda-project.onrender.com)
 
 (*Replace `<APP_NAME>` with your actual Render app name*)
 
