@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
 
 # Function to display detailed data information
 def display_data_info(df):
@@ -26,6 +25,8 @@ def clean_data(df):
     df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
     df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
     df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
+
+    # Ensure 'is_4wd' column is boolean
     df['is_4wd'] = df['is_4wd'].astype('bool', errors='ignore')
 
     # Fill NaN values in non-numeric columns with a placeholder
@@ -48,6 +49,10 @@ except FileNotFoundError:
 df = clean_data(df)
 
 # Display initial data info
+st.write("Data before display:")
+st.write(df.head(10))  # Display the first 10 rows for better visibility
+
+# Display the cleaned data info
 display_data_info(df)
 
 # Header
