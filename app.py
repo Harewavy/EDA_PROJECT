@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.express as px
 
 # Read the dataset
@@ -21,7 +22,14 @@ st.write(df.columns)
 st.write("Data types of each column:")
 st.write(df.dtypes)
 
-# Convert all columns to appropriate data types
+# Check for non-numeric values in the 'price' column
+non_numeric_prices = df[~df['price'].astype(str).str.isnumeric()]
+if not non_numeric_prices.empty:
+    st.error("The 'price' column contains non-numeric values that could not be converted.")
+    st.write("Rows with non-numeric 'price' values:")
+    st.write(non_numeric_prices)
+    st.stop()
+
 # Ensure 'price' column is numeric and handle conversion issues
 df['price'] = pd.to_numeric(df['price'], errors='coerce')
 
@@ -29,7 +37,7 @@ df['price'] = pd.to_numeric(df['price'], errors='coerce')
 if df['price'].isnull().any():
     st.write("Rows with NaN values in 'price' after conversion:")
     st.write(df[df['price'].isnull()])
-    # Fill NaN values with 0 or drop rows with NaN values in 'price'
+    # Drop rows with NaN values in 'price'
     df = df.dropna(subset=['price'])
 
 # Display the cleaned data types of each column
