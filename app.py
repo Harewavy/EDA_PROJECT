@@ -38,6 +38,14 @@ df = handle_missing_values(df)
 # Drop rows with NaN values in 'price'
 df = df.dropna(subset=['price'])
 
+# Ensure all columns have the correct data types before displaying
+st.write("Data types after cleaning:")
+st.write(df.dtypes)
+
+# Display cleaned DataFrame preview
+st.write("Cleaned DataFrame preview:")
+st.write(df.head(10))
+
 # Check if 'manufacturer' column exists
 if 'manufacturer' not in df.columns:
     st.error("The required column 'manufacturer' is missing from the dataset.")
